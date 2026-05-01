@@ -18,7 +18,7 @@ export default function SignupPage() {
     gender: 'male', activity_level: 'moderate', goal_type: 'maintain',
   })
 
-  function set(field: string, value: string) {
+  function set(field: keyof typeof form, value: string) {
     setForm(prev => ({ ...prev, [field]: value }))
   }
 
@@ -29,25 +29,38 @@ export default function SignupPage() {
     setLoading(true)
     setError('')
 
-    const res = await fetch('/api/user/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...form,
-        weight_kg: parseFloat(form.weight_kg),
-        height_cm: parseFloat(form.height_cm),
-        age: parseInt(form.age),
-      }),
-    })
-
-    const data = await res.json()
-    if (!res.ok) {
-      setError(data.error ?? 'Registration failed')
+    let data: { error?: string; data?: { id: string } }
+    try {
+      const res = await fetch('/api/user/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          weight_kg: parseFloat(form.weight_kg),
+          height_cm: parseFloat(form.height_cm),
+          age: parseInt(form.age),
+        }),
+      })
+      data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? 'Registration failed')
+        setLoading(false)
+        return
+      }
+    } catch {
+      setError('Something went wrong. Please try again.')
       setLoading(false)
       return
     }
 
-    await signIn('credentials', { email: form.email, password: form.password, redirect: false })
+    const result = await signIn('credentials', { email: form.email, password: form.password, redirect: false })
+    if (result?.error) {
+      setError('Account created but sign-in failed. Please log in manually.')
+      setLoading(false)
+      router.push('/auth/login')
+      return
+    }
+    setLoading(false)
     router.push('/dashboard')
   }
 
