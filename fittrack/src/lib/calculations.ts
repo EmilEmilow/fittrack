@@ -1,5 +1,12 @@
 import { Gender, ActivityLevel, GoalType } from '@/types'
 
+export type TargetsResult = {
+  calorie_target: number
+  protein_target_g: number
+  fat_target_g: number
+  carbs_target_g: number
+}
+
 const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
   sedentary: 1.2,
   light: 1.375,
@@ -38,7 +45,7 @@ export function calculateMacros({ weight_kg, calorie_target }: {
 }): { protein_g: number; fat_g: number; carbs_g: number } {
   const protein_g = Math.round(2 * weight_kg)
   const fat_g = Math.round(weight_kg)
-  const carbs_g = Math.round((calorie_target - protein_g * 4 - fat_g * 9) / 4)
+  const carbs_g = Math.max(0, Math.round((calorie_target - protein_g * 4 - fat_g * 9) / 4))
   return { protein_g, fat_g, carbs_g }
 }
 
@@ -49,7 +56,7 @@ export function calculateAllTargets(user: {
   gender: Gender
   activity_level: ActivityLevel
   goal_type: GoalType
-}) {
+}): TargetsResult {
   const bmr = calculateBMR(user)
   const tdee = calculateTDEE(bmr, user.activity_level)
   const calorie_target = calculateCalorieTarget(tdee, user.goal_type)

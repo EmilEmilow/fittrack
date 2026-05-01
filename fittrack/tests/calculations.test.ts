@@ -60,6 +60,11 @@ describe('calculateMacros', () => {
     const result = calculateMacros({ weight_kg: 80, calorie_target: 2500 })
     expect(result.carbs_g).toBe(285)
   })
+
+  it('clamps carbs to zero when calories are insufficient', () => {
+    const result = calculateMacros({ weight_kg: 80, calorie_target: 1000 })
+    expect(result.carbs_g).toBeGreaterThanOrEqual(0)
+  })
 })
 
 describe('calculateAllTargets', () => {
