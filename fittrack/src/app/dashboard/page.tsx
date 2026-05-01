@@ -2,22 +2,54 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { prisma } from '@/lib/prisma'
 import { CalorieRing } from '@/components/CalorieRing'
 import { MacroBar } from '@/components/MacroBar'
 
-async function getSummary() {
+async function getSummary(userId: string) {
   const today = new Date().toISOString().split('T')[0]
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/summary?date=${today}`, { cache: 'no-store' })
-  if (!res.ok) return null
-  const { data } = await res.json()
-  return data
+  const startOfDay = new Date(today)
+  startOfDay.setHours(0, 0, 0, 0)
+  const endOfDay = new Date(today)
+  endOfDay.setHours(23, 59, 59, 999)
+
+  const [user, entries] = await Promise.all([
+    prisma.user.findUnique({ where: { id: userId } }),
+    prisma.diaryEntry.findMany({
+      where: { user_id: userId, date: { gte: startOfDay, lte: endOfDay } },
+    }),
+  ])
+
+  if (!user) return null
+
+  const consumed = entries.reduce(
+    (acc, e) => ({
+      calories: acc.calories + e.calories,
+      protein_g: acc.protein_g + e.protein_g,
+      carbs_g: acc.carbs_g + e.carbs_g,
+      fat_g: acc.fat_g + e.fat_g,
+    }),
+    { calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0 }
+  )
+
+  return {
+    consumed,
+    targets: {
+      calorie_target: user.calorie_target,
+      protein_target_g: user.protein_target_g,
+      carbs_target_g: user.carbs_target_g,
+      fat_target_g: user.fat_target_g,
+    },
+    goal_type: user.goal_type,
+    name: user.name,
+  }
 }
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/auth/login')
 
-  const summary = await getSummary()
+  const summary = await getSummary(session.user.id)
 
   const goalLabel: Record<string, string> = {
     cut: 'Cutting — weight loss',
@@ -30,7 +62,7 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Hello, {session.user.name} 👋</h1>
-          <p className="text-sm text-gray-500">{goalLabel[summary?.goal_type ?? 'maintain']}</p>
+          <p className="text-sm text-gray-500">{goalLabel[summary?.goal_type ?? 'maintain'] ?? 'Goal set'}</p>
         </div>
         <Link href="/search"
           className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700">

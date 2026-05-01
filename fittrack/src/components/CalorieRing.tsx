@@ -4,7 +4,7 @@ interface CalorieRingProps {
 }
 
 export function CalorieRing({ consumed, target }: CalorieRingProps) {
-  const pct = Math.min((consumed / target) * 100, 100)
+  const pct = target > 0 ? Math.min((consumed / target) * 100, 100) : 0
   const r = 54
   const circ = 2 * Math.PI * r
   const offset = circ - (pct / 100) * circ

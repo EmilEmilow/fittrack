@@ -6,7 +6,7 @@ interface MacroBarProps {
 }
 
 export function MacroBar({ label, consumed, target, color }: MacroBarProps) {
-  const pct = Math.min((consumed / target) * 100, 100)
+  const pct = target > 0 ? Math.min((consumed / target) * 100, 100) : 0
   return (
     <div className="mb-4">
       <div className="flex justify-between text-sm mb-1">
