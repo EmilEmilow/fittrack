@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id               String   @id @default(cuid())
+  email            String   @unique
+  password_hash    String
+  name             String
+  weight_kg        Float
+  height_cm        Float
+  age              Int
+  gender           String
+  activity_level   String
+  goal_type        String
+  calorie_target   Int
+  protein_target_g Int
+  carbs_target_g   Int
+  fat_target_g     Int
+  created_at       DateTime @default(now())
+
+  diary_entries    DiaryEntry[]
+  user_preferences UserPreference[]
+  recommendations  Recommendation[]
+  daily_summaries  DailySummary[]
+  weight_logs      WeightLog[]
+  custom_meals     CustomMeal[]
+  food_items       FoodItem[]       @relation("CreatedFoods")
+}
+
+model FoodItem {
+  id           String  @id @default(cuid())
+  name         String
+  calories     Float
+  protein_g    Float
+  carbs_g      Float
+  fat_g        Float
+  fiber_g      Float?
+  serving_size Float
+  serving_unit String
+  source       String
+  external_id  String?
+  created_by   String?
+
+  creator          User?            @relation("CreatedFoods", fields: [created_by], references: [id])
+  diary_entries    DiaryEntry[]
+  user_preferences UserPreference[]
+}
+
+model DiaryEntry {
+  id           String   @id @default(cuid())
+  user_id      String
+  food_item_id String
+  date         DateTime
+  meal_type    String
+  quantity     Float
+  calories     Float
+  protein_g    Float
+  carbs_g      Float
+  fat_g        Float
+
+  user      User     @relation(fields: [user_id], references: [id])
+  food_item FoodItem @relation(fields: [food_item_id], references: [id])
+}
+
+model UserPreference {
+  id              String @id @default(cuid())
+  user_id         String
+  food_item_id    String
+  preference      String @default("neutral")
+  frequency_count Int    @default(1)
+
+  user      User     @relation(fields: [user_id], references: [id])
+  food_item FoodItem @relation(fields: [food_item_id], references: [id])
+
+  @@unique([user_id, food_item_id])
+}
+
+model Recommendation {
+  id              String   @id @default(cuid())
+  user_id         String
+  date            DateTime @default(now())
+  suggestion_text String
+  reasoning       String
+  foods_suggested String
+  was_accepted    Boolean  @default(false)
+
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model DailySummary {
+  id             String   @id @default(cuid())
+  user_id        String
+  date           DateTime
+  total_calories Float
+  total_protein  Float
+  total_carbs    Float
+  total_fat      Float
+  goal_met       Boolean
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, date])
+}
+
+model WeightLog {
+  id        String   @id @default(cuid())
+  user_id   String
+  date      DateTime
+  weight_kg Float
+  notes     String?
+
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model CustomMeal {
+  id             String @id @default(cuid())
+  user_id        String
+  name           String
+  items          String
+  total_calories Float
+  total_protein  Float
+  total_carbs    Float
+  total_fat      Float
+
+  user User @relation(fields: [user_id], references: [id])
+}
