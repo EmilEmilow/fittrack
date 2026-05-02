@@ -209,9 +209,9 @@ export default function ProfilePage() {
             onChange={e => setGoalType(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           >
-            <option value="cut">Cut (lose fat)</option>
-            <option value="maintain">Maintain</option>
-            <option value="bulk">Bulk (gain muscle)</option>
+            {Object.entries(GOAL_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
           </select>
         </div>
 
@@ -223,11 +223,9 @@ export default function ProfilePage() {
             onChange={e => setActivityLevel(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           >
-            <option value="sedentary">Sedentary (little or no exercise)</option>
-            <option value="light">Lightly Active (1–3 days/week)</option>
-            <option value="moderate">Moderately Active (3–5 days/week)</option>
-            <option value="active">Very Active (6–7 days/week)</option>
-            <option value="very_active">Extremely Active (physical job or 2x/day)</option>
+            {Object.entries(ACTIVITY_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
           </select>
         </div>
 
