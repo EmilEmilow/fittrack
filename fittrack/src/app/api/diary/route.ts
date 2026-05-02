@@ -27,12 +27,24 @@ export async function GET(req: NextRequest) {
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { searchParams } = new URL(req.url)
+  const startParam = searchParams.get('start')
+  const endParam = searchParams.get('end')
   const dateStr = searchParams.get('date') ?? new Date().toISOString().split('T')[0]
 
-  const start = new Date(dateStr)
-  start.setHours(0, 0, 0, 0)
-  const end = new Date(dateStr)
-  end.setHours(23, 59, 59, 999)
+  let start: Date
+  let end: Date
+
+  if (startParam && endParam) {
+    start = new Date(startParam)
+    start.setHours(0, 0, 0, 0)
+    end = new Date(endParam)
+    end.setHours(23, 59, 59, 999)
+  } else {
+    start = new Date(dateStr)
+    start.setHours(0, 0, 0, 0)
+    end = new Date(dateStr)
+    end.setHours(23, 59, 59, 999)
+  }
 
   const entries = await prisma.diaryEntry.findMany({
     where: { user_id: session.user.id, date: { gte: start, lte: end } },
