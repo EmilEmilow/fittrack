@@ -36,8 +36,11 @@ export async function GET(req: NextRequest) {
 
   if (startParam && endParam) {
     start = new Date(startParam)
-    start.setHours(0, 0, 0, 0)
     end = new Date(endParam)
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return NextResponse.json({ error: 'Invalid date range' }, { status: 400 })
+    }
+    start.setHours(0, 0, 0, 0)
     end.setHours(23, 59, 59, 999)
   } else {
     start = new Date(dateStr)

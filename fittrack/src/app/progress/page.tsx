@@ -107,18 +107,12 @@ export default function ProgressPage() {
       const start90 = getDateString(89)
       const start30 = getDateString(29)
 
-      const [res90, res30] = await Promise.all([
-        fetch(`/api/diary?start=${start90}&end=${today}`),
-        fetch(`/api/diary?start=${start30}&end=${today}`),
-      ])
-
-      const [json90, json30] = await Promise.all([res90.json(), res30.json()])
-
-      const entries90: DiaryEntry[] = json90.data ?? []
-      const entries30: DiaryEntry[] = json30.data ?? []
+      const res = await fetch(`/api/diary?start=${start90}&end=${today}`)
+      const json = await res.json()
+      const entries90: DiaryEntry[] = json.data ?? []
 
       setStreak(calculateStreak(entries90))
-      setCalorieData(groupCaloriesByDay(entries30))
+      setCalorieData(groupCaloriesByDay(entries90.filter(e => e.date.split('T')[0] >= start30)))
     } catch {
       // silently fail
     } finally {
