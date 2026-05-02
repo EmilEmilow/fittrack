@@ -23,13 +23,14 @@ model User {
   fat_target_g     Int
   created_at       DateTime @default(now())
 
-  diary_entries    DiaryEntry[]
-  user_preferences UserPreference[]
-  recommendations  Recommendation[]
-  daily_summaries  DailySummary[]
-  weight_logs      WeightLog[]
-  custom_meals     CustomMeal[]
-  food_items       FoodItem[]       @relation("CreatedFoods")
+  diary_entries         DiaryEntry[]
+  user_preferences      UserPreference[]
+  recommendations       Recommendation[]
+  daily_summaries       DailySummary[]
+  weight_logs           WeightLog[]
+  custom_meals          CustomMeal[]
+  food_items            FoodItem[]            @relation("CreatedFoods")
+  password_reset_tokens PasswordResetToken[]
 }
 
 model FoodItem {
@@ -128,4 +129,13 @@ model CustomMeal {
   total_fat      Float
 
   user User @relation(fields: [user_id], references: [id])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  user_id String
+  token   String   @unique
+  expires DateTime
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
