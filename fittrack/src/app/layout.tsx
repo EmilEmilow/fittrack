@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={inter.className}>
         <SessionProvider session={session}>
           {session && <Navbar />}
-          <main className="max-w-3xl mx-auto px-4 py-6">{children}</main>
+          <main>{children}</main>
         </SessionProvider>
       </body>
     </html>
