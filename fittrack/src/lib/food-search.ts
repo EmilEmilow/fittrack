@@ -10,7 +10,7 @@ async function searchUSDA(query: string): Promise<FoodSearchResult[]> {
     const nutrients = (food.foodNutrients as Array<{ nutrientNumber: string; value: number }>) ?? []
     const get = (num: string) => nutrients.find(n => n.nutrientNumber === num)?.value ?? 0
     return {
-      name: food.description as string,
+      name: (food.description as string) || 'Unknown Food',
       calories: get('208'),
       protein_g: get('203'),
       carbs_g: get('205'),
@@ -35,7 +35,7 @@ async function searchOpenFoodFacts(query: string): Promise<FoodSearchResult[]> {
     .map((p: Record<string, unknown>) => {
       const n = p.nutriments as Record<string, number>
       return {
-        name: p.product_name as string,
+        name: (p.product_name as string) || 'Unknown Food',
         calories: n['energy-kcal_100g'] ?? 0,
         protein_g: n['proteins_100g'] ?? 0,
         carbs_g: n['carbohydrates_100g'] ?? 0,
@@ -44,7 +44,7 @@ async function searchOpenFoodFacts(query: string): Promise<FoodSearchResult[]> {
         serving_size: 100,
         serving_unit: 'g',
         source: 'open_food_facts' as const,
-        external_id: String(p.id ?? p.code ?? ''),
+        external_id: String(p.id ?? p.code ?? crypto.randomUUID()),
       }
     })
 }

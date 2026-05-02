@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { FoodSearchResult } from '@/types'
 
 interface FoodSearchInputProps {
@@ -10,14 +10,24 @@ export function FoodSearchInput({ onSelect }: FoodSearchInputProps) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<FoodSearchResult[]>([])
   const [loading, setLoading] = useState(false)
+  const abortRef = useRef<AbortController | null>(null)
 
   const search = useCallback(async (q: string) => {
     if (q.length < 2) { setResults([]); return }
+    abortRef.current?.abort()
+    abortRef.current = new AbortController()
     setLoading(true)
-    const res = await fetch(`/api/foods/search?q=${encodeURIComponent(q)}`)
-    const { data } = await res.json()
-    setResults(data ?? [])
-    setLoading(false)
+    try {
+      const res = await fetch(`/api/foods/search?q=${encodeURIComponent(q)}`, {
+        signal: abortRef.current.signal,
+      })
+      const { data } = await res.json()
+      setResults(data ?? [])
+    } catch (e) {
+      if ((e as Error).name !== 'AbortError') setResults([])
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

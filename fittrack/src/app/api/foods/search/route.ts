@@ -9,10 +9,11 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url)
   const query = searchParams.get('q')
-  if (!query || query.trim().length < 2) {
+  const trimmed = (query ?? '').trim()
+  if (trimmed.length < 2 || trimmed.length > 100) {
     return NextResponse.json({ data: [] })
   }
 
-  const results = await searchFoods(query.trim())
+  const results = await searchFoods(trimmed)
   return NextResponse.json({ data: results })
 }

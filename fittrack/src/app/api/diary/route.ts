@@ -53,25 +53,32 @@ export async function POST(req: NextRequest) {
 
   const { food, meal_type, quantity, date } = parsed.data
 
+  const foodData = {
+    name: food.name,
+    calories: food.calories,
+    protein_g: food.protein_g,
+    carbs_g: food.carbs_g,
+    fat_g: food.fat_g,
+    fiber_g: food.fiber_g,
+    serving_size: food.serving_size,
+    serving_unit: food.serving_unit,
+    source: food.source,
+    external_id: food.external_id,
+  }
+
   let foodItem = await prisma.foodItem.findFirst({
     where: { source: food.source, external_id: food.external_id },
   })
 
   if (!foodItem) {
-    foodItem = await prisma.foodItem.create({
-      data: {
-        name: food.name,
-        calories: food.calories,
-        protein_g: food.protein_g,
-        carbs_g: food.carbs_g,
-        fat_g: food.fat_g,
-        fiber_g: food.fiber_g,
-        serving_size: food.serving_size,
-        serving_unit: food.serving_unit,
-        source: food.source,
-        external_id: food.external_id,
-      },
-    })
+    try {
+      foodItem = await prisma.foodItem.create({ data: foodData })
+    } catch {
+      foodItem = await prisma.foodItem.findFirst({
+        where: { source: food.source, external_id: food.external_id },
+      })
+      if (!foodItem) return NextResponse.json({ error: 'Failed to create food item' }, { status: 500 })
+    }
   }
 
   const entry = await prisma.diaryEntry.create({

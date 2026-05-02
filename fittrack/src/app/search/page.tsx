@@ -8,22 +8,31 @@ export default function SearchPage() {
   const [mealType, setMealType] = useState<MealType>('breakfast')
   const [quantity, setQuantity] = useState('1')
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [adding, setAdding] = useState(false)
 
   async function handleAdd() {
-    if (!selected) return
+    if (!selected || adding) return
+    setAdding(true)
     setStatus('idle')
-    const res = await fetch('/api/diary', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        food: selected,
-        meal_type: mealType,
-        quantity: parseFloat(quantity),
-        date: new Date().toISOString(),
-      }),
-    })
-    setStatus(res.ok ? 'success' : 'error')
-    if (res.ok) setSelected(null)
+    const date = new Date().toISOString().split('T')[0]
+    try {
+      const res = await fetch('/api/diary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          food: selected,
+          meal_type: mealType,
+          quantity: parseFloat(quantity),
+          date,
+        }),
+      })
+      setStatus(res.ok ? 'success' : 'error')
+      if (res.ok) setSelected(null)
+    } catch {
+      setStatus('error')
+    } finally {
+      setAdding(false)
+    }
   }
 
   return (
@@ -61,9 +70,12 @@ export default function SearchPage() {
             </div>
           </div>
 
-          <button onClick={handleAdd}
-            className="w-full bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700">
-            Add to Diary
+          <button
+            onClick={handleAdd}
+            disabled={adding}
+            className="w-full bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
+          >
+            {adding ? 'Adding...' : 'Add to Diary'}
           </button>
 
           {status === 'success' && <p className="text-green-600 text-sm mt-2 text-center">Added successfully!</p>}
