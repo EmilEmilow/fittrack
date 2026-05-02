@@ -21,3 +21,14 @@ export interface ApiResponse<T> {
   data?: T
   error?: string
 }
+
+export interface DiaryEntry {
+  id: string
+  meal_type: MealType
+  quantity: number
+  calories: number
+  protein_g: number
+  carbs_g: number
+  fat_g: number
+  food_item: { name: string; serving_unit: string; serving_size: number }
+}

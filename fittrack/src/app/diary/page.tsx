@@ -1,32 +1,25 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { DiaryEntry } from '@/types'
 import { DiaryEntryRow } from '@/components/DiaryEntryRow'
 import Link from 'next/link'
 
 const MEALS = ['breakfast', 'lunch', 'dinner', 'snack'] as const
-
-interface DiaryEntry {
-  id: string
-  meal_type: string
-  quantity: number
-  calories: number
-  protein_g: number
-  carbs_g: number
-  fat_g: number
-  food_item: { name: string; serving_unit: string; serving_size: number }
-}
 
 export default function DiaryPage() {
   const today = new Date().toISOString().split('T')[0]
   const [date, setDate] = useState(today)
   const [entries, setEntries] = useState<DiaryEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     setLoading(true)
+    setError('')
     fetch(`/api/diary?date=${date}`)
       .then(r => r.json())
       .then(({ data }) => { setEntries(data ?? []); setLoading(false) })
+      .catch(() => { setError('Failed to load diary. Please refresh.'); setLoading(false) })
   }, [date])
 
   function handleDelete(id: string) {
@@ -48,6 +41,8 @@ export default function DiaryPage() {
 
       {loading ? (
         <p className="text-gray-400 text-center py-12">Loading...</p>
+      ) : error ? (
+        <p className="text-red-500 text-center py-12">{error}</p>
       ) : (
         <>
           {MEALS.map(meal => {
@@ -56,7 +51,7 @@ export default function DiaryPage() {
               <div key={meal} className="bg-white rounded-xl shadow-sm mb-4 overflow-hidden">
                 <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
                   <h2 className="font-semibold text-gray-700 capitalize">{meal}</h2>
-                  <Link href="/search" className="text-green-600 text-sm hover:underline">+ Add</Link>
+                  <Link href={`/search?meal=${meal}&date=${date}`} className="text-green-600 text-sm hover:underline">+ Add</Link>
                 </div>
                 <div className="px-4">
                   {mealEntries.length === 0 ? (
