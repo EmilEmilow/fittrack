@@ -1,6 +1,9 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { prisma } from '@/lib/prisma'
 
+if (!process.env.ANTHROPIC_API_KEY) {
+  throw new Error('ANTHROPIC_API_KEY is not set')
+}
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export async function getRecommendations(userId: string) {
@@ -49,6 +52,7 @@ export async function getRecommendations(userId: string) {
     maintain: 'maintaining weight',
     bulk: 'bulking (muscle gain, calorie surplus)',
   }
+  const goalLabel = goalDesc[user.goal_type] ?? user.goal_type
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
@@ -58,7 +62,7 @@ export async function getRecommendations(userId: string) {
         role: 'user',
         content: `You are a nutrition coach. Suggest 3-5 foods for a user based on their goals and eating history.
 
-Goal: ${goalDesc[user.goal_type]}
+Goal: ${goalLabel}
 Remaining today: ${remaining.calories} kcal | ${remaining.protein}g protein | ${remaining.carbs}g carbs | ${remaining.fat}g fat
 Favourite foods: ${favFoods}
 Recent meals (7 days): ${recentNames}
@@ -75,11 +79,16 @@ Return ONLY a JSON object with this exact shape, no extra text:
   })
 
   const content = message.content[0]
-  if (content.type !== 'text') throw new Error('Unexpected Claude response')
+  if (content.type !== 'text') throw new Error('Unexpected Claude response type')
 
-  const parsed = JSON.parse(content.text) as {
-    suggestions: { food: string; reason: string }[]
-    summary: string
+  let parsed: { suggestions: { food: string; reason: string }[]; summary: string }
+  try {
+    parsed = JSON.parse(content.text)
+  } catch {
+    throw new Error('Claude returned invalid JSON')
+  }
+  if (!parsed || !Array.isArray(parsed.suggestions) || typeof parsed.summary !== 'string') {
+    throw new Error('Claude response has unexpected shape')
   }
 
   await prisma.recommendation.create({
