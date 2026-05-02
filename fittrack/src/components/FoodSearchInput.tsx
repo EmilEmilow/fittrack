@@ -63,7 +63,7 @@ export function FoodSearchInput({ onSelect }: FoodSearchInputProps) {
               <div className="font-medium text-sm text-gray-800">{food.name}</div>
               <div className="text-xs text-gray-500 mt-0.5">
                 {Math.round(food.calories)} kcal · P: {Math.round(food.protein_g)}g · C: {Math.round(food.carbs_g)}g · F: {Math.round(food.fat_g)}g
-                <span className="ml-2 text-gray-400">({food.source === 'usda' ? 'USDA' : 'Open Food Facts'})</span>
+                <span className="ml-2 text-gray-400">({food.source === 'usda' ? 'USDA' : food.source === 'custom' ? 'Custom' : 'Open Food Facts'})</span>
               </div>
             </li>
           ))}

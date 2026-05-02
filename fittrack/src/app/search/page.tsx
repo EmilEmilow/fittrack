@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Link from 'next/link'
 import { FoodSearchInput } from '@/components/FoodSearchInput'
 import { FoodSearchResult, MealType } from '@/types'
 
@@ -37,7 +38,12 @@ export default function SearchPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Search Foods</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Search Foods</h1>
+        <Link href="/foods/custom" className="text-sm text-green-600 hover:text-green-700 font-medium">
+          Create custom food →
+        </Link>
+      </div>
 
       <FoodSearchInput onSelect={setSelected} />
 
