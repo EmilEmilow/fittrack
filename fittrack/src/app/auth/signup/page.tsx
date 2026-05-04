@@ -78,19 +78,19 @@ export default function SignupPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                 <input value={form.name} onChange={e => set('name', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
                   required />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <input type="email" value={form.email} onChange={e => set('email', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
                   required />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
                 <input type="password" value={form.password} onChange={e => set('password', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
                   minLength={6} required />
               </div>
             </>
@@ -102,25 +102,25 @@ export default function SignupPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
                   <input type="number" step="0.1" value={form.weight_kg} onChange={e => set('weight_kg', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
                     required />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
                   <input type="number" value={form.height_cm} onChange={e => set('height_cm', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
                     required />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
                   <input type="number" value={form.age} onChange={e => set('age', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
                     required />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
                   <select value={form.gender} onChange={e => set('gender', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                   </select>
@@ -129,7 +129,7 @@ export default function SignupPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Activity Level</label>
                 <select value={form.activity_level} onChange={e => set('activity_level', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500">
                   <option value="sedentary">Sedentary (desk job, no exercise)</option>
                   <option value="light">Light (1-3 days/week exercise)</option>
                   <option value="moderate">Moderate (3-5 days/week exercise)</option>
@@ -140,7 +140,7 @@ export default function SignupPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Goal</label>
                 <select value={form.goal_type} onChange={e => set('goal_type', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500">
                   <option value="cut">Cut — Lose weight</option>
                   <option value="maintain">Maintain — Keep current weight</option>
                   <option value="bulk">Bulk — Build muscle</option>

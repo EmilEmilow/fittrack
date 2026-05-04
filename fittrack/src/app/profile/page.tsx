@@ -142,7 +142,7 @@ export default function ProfilePage() {
             onChange={e => setName(e.target.value)}
             maxLength={100}
             required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 
@@ -167,7 +167,7 @@ export default function ProfilePage() {
             min={13}
             max={120}
             required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 
@@ -182,7 +182,7 @@ export default function ProfilePage() {
             max={250}
             step="0.1"
             required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 
@@ -197,7 +197,7 @@ export default function ProfilePage() {
             max={300}
             step="0.1"
             required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 
@@ -207,7 +207,7 @@ export default function ProfilePage() {
           <select
             value={goalType}
             onChange={e => setGoalType(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             {Object.entries(GOAL_LABELS).map(([value, label]) => (
               <option key={value} value={value}>{label}</option>
@@ -221,7 +221,7 @@ export default function ProfilePage() {
           <select
             value={activityLevel}
             onChange={e => setActivityLevel(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             {Object.entries(ACTIVITY_LABELS).map(([value, label]) => (
               <option key={value} value={value}>{label}</option>

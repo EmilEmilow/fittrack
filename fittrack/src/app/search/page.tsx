@@ -61,13 +61,13 @@ export default function SearchPage() {
               <input
                 type="number" step="0.1" min="0.1" value={quantity}
                 onChange={e => setQuantity(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
             <div className="flex-1">
               <label className="block text-xs font-medium text-gray-600 mb-1">Meal</label>
               <select value={mealType} onChange={e => setMealType(e.target.value as MealType)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500">
                 <option value="breakfast">Breakfast</option>
                 <option value="lunch">Lunch</option>
                 <option value="dinner">Dinner</option>
